@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "lG2Qgcqf3bIGPeX4UvnvNK8Z+Zib4a2zYxM6OhxeJl/XPNzAB4U+M7JO0NIVJfVp3ubQ4p+blg1NMGLdpDwsCw==",
+  "dgSpecHash": "Blj/3MO4yaX2vzd0MB0NiQ4Fw0igPaAtX3V6EqljWvKeuhpDNPNEvDv3asM+rI0OjXG2t8UqR5lwDRMf6oPcWA==",
   "success": true,
   "projectFilePath": "D:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\kmiyazaki\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
