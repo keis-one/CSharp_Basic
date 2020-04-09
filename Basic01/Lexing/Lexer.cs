@@ -76,7 +76,6 @@ namespace Basic01.Lexing
 
             // 次の文字に進める
             ReadChar();
-            Console.WriteLine($@"トークン：{token.Type},{token.Literal}");
             token.DebugLog("token");
 
             return token;

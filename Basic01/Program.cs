@@ -1,4 +1,5 @@
 ﻿using System;
+using Basic01.Front;
 
 namespace Basic01
 {
@@ -6,7 +7,10 @@ namespace Basic01
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Hello Basic01!");
+
+            var repl = new Repl();
+            repl.Start();
         }
     }
 }
