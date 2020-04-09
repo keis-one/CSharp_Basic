@@ -1,3 +1,4 @@
+using System;
 namespace Basic01.Lexing
 {
     public class Lexer
@@ -18,6 +19,7 @@ namespace Basic01.Lexing
         /// 呼び出すごとにソースコードからトークンを生成
         public Token NextToken()
         {
+            SkipWhiteSpace();
             Token token = null;
             switch (_currentChar)
             {
@@ -48,12 +50,97 @@ namespace Basic01.Lexing
                 case (char)0:
                     token = new Token(TokenType.EOF, "");
                     break;
+                default:
+                    if(IsLetter(_currentChar))
+                    {
+                        var identifier = ReadIdentifier();
+                        var type = Token.LookupIdentifier(identifier);
+                        token = new Token(type, identifier);
+                    }
+                    else if(IsDigit(_currentChar))
+                    {
+                        var number = ReadNumber();
+                        token = new Token(TokenType.INT, number);
+                    }
+                    else if(IsReturnCode(_currentChar))
+                    {
+                        var code = ReadReturnCode();
+                        token = new Token(TokenType.RETURNCODE, code);
+                    }
+                    else
+                    {
+                        token = new Token(TokenType.ILLEGAL, _currentChar.ToString());
+                    }
+                    break;
             }
 
             // 次の文字に進める
             ReadChar();
+            Console.WriteLine($@"トークン：{token.Type},{token.Literal}");
             token.DebugLog("token");
+
             return token;
+        }
+
+        /// 現在の文字から識別子に対応した文字である限り読み進め、
+        /// 識別子に対応した文字列を返す。
+        private string ReadIdentifier()
+        {
+            var identifier = _currentChar.ToString();
+            // 次の文字がLetterであればそれを読んで加える
+            while (IsLetter(_nextChar))
+            {
+                identifier += _nextChar;
+                ReadChar();
+            }
+            return identifier;
+        }
+        /// 現在の文字から識別子に対応した文字である限り読み進め、
+        /// 識別子に対応した文字列を返す。
+        private string ReadNumber()
+        {
+            var number = _currentChar.ToString();
+            // 次の文字が数値であればそれを読んで加える
+            while (IsDigit(_nextChar))
+            {
+                number += _nextChar;
+                ReadChar();
+            }
+            return number;
+        }
+        /// 現在の文字から識別子に対応した文字である限り読み進め、
+        /// 識別子に対応した文字列を返す。
+        private string ReadReturnCode()
+        {
+            var code = _currentChar.ToString();
+            // 次の文字が改行コードであればそれを読んで加える
+            while (IsReturnCode(_nextChar))
+            {
+                code += _nextChar;
+                ReadChar();
+            }
+            return code;
+        }
+
+        /// _もしくはa～z,A～Zのいずれかからなる文字列かどうか。
+        /// 数字は含まない。
+        private bool IsLetter(char c)
+        {
+            return ('a' <= c && c <= 'z')
+                || ('A' <= c && c <= 'Z')
+                || c == '_';
+        }
+        /// 0～9のいずれかからなる文字列かどうか。
+        /// TODO:小数や16進数など複雑な数値には対応していない。
+        private bool IsDigit(char c)
+        {
+            return ('0' <= c && c <= '9');
+        }
+        /// 0～9のいずれかからなる文字列かどうか。
+        /// TODO:小数や16進数など複雑な数値には対応していない。
+        private bool IsReturnCode(char c)
+        {
+            return (c == '\r' || c == '\n');
         }
 
         /// 1文字を読み進めるためのメソッド
@@ -82,6 +169,16 @@ namespace Basic01.Lexing
             _nextChar.DebugLog("_nextChar");
 
             _position += 1;
+        }
+
+        /// 空白やタブは読み飛ばす
+        private void SkipWhiteSpace()
+        {
+                while(_currentChar == ' '
+                    || _currentChar == '\t')
+                {
+                    ReadChar();
+                }
         }
     }
 }
