@@ -46,6 +46,7 @@ namespace Basic01.Parsing
             var root = new Root();
             root.Statements = new List<IStatement>();
             
+            // プログラムの終端まで
             while (this.CurrentToken.Type != TokenType.EOF)
             {
                 var statement = this.ParseStatement();

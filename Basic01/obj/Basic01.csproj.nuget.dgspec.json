@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj": {}
+    "D:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj": {}
   },
   "projects": {
-    "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj": {
+    "D:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj",
+        "projectUniqueName": "D:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj",
         "projectName": "Basic01",
-        "projectPath": "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj",
+        "projectPath": "D:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj",
         "packagesPath": "C:\\Users\\kmiyazaki\\.nuget\\packages\\",
-        "outputPath": "d:\\Programming\\CSharp_Basic\\Basic01\\obj\\",
+        "outputPath": "D:\\Programming\\CSharp_Basic\\Basic01\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
