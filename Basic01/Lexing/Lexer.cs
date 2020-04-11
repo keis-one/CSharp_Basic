@@ -3,18 +3,18 @@ namespace Basic01.Lexing
 {
     public class Lexer
     {
-        public string _input {get; private set;}
-        public char _currentChar {get; private set;}    //_positionが指す値
-        public char _nextChar {get; private set;}   // 次の文字を先読みして保持
-        public int _position {get; private set;}    // 現在読み出している文字位置
+        public string Input {get; private set;}
+        public char CurrentChar {get; private set;}    //Positionが指す値
+        public char NextChar {get; private set;}   // 次の文字を先読みして保持
+        public int Position {get; private set;}    // 現在読み出している文字位置
 
         /// 字句解析器
         /// 構文上意味のある語でトークン列を生成します。
         /// ソースコードからトークン列を生成する機能。
         public Lexer(string input)
         {
-            _input = input;
-            _input.DebugLog("_input");
+            this.Input = input;
+            this.Input.DebugLog("Input");
             ReadChar();
         }
 
@@ -23,55 +23,55 @@ namespace Basic01.Lexing
         {
             SkipWhiteSpace();
             Token token = null;
-            switch (_currentChar)
+            switch (this.CurrentChar)
             {
                 case '=':
-                    token = new Token(TokenType.ASSIGN, _currentChar.ToString());
+                    token = new Token(TokenType.ASSIGN, this.CurrentChar.ToString());
                     break;
                 case '+':
-                    token = new Token(TokenType.PLUS, _currentChar.ToString());
+                    token = new Token(TokenType.PLUS, this.CurrentChar.ToString());
                     break;
                 case ',':
-                    token = new Token(TokenType.COMMA, _currentChar.ToString());
+                    token = new Token(TokenType.COMMA, this.CurrentChar.ToString());
                     break;
                 case ';':
-                    token = new Token(TokenType.SEMICOLON, _currentChar.ToString());
+                    token = new Token(TokenType.SEMICOLON, this.CurrentChar.ToString());
                     break;
                 case '(':
-                    token = new Token(TokenType.LPAREN, _currentChar.ToString());
+                    token = new Token(TokenType.LPAREN, this.CurrentChar.ToString());
                     break;
                 case ')':
-                    token = new Token(TokenType.RPAREN, _currentChar.ToString());
+                    token = new Token(TokenType.RPAREN, this.CurrentChar.ToString());
                     break;
                 case '{':
-                    token = new Token(TokenType.LBRACE, _currentChar.ToString());
+                    token = new Token(TokenType.LBRACE, this.CurrentChar.ToString());
                     break;
                 case '}':
-                    token = new Token(TokenType.RBRACE, _currentChar.ToString());
+                    token = new Token(TokenType.RBRACE, this.CurrentChar.ToString());
                     break;
                 case (char)0:
                     token = new Token(TokenType.EOF, "");
                     break;
                 default:
-                    if(IsLetter(_currentChar))
+                    if(IsLetter(this.CurrentChar))
                     {
                         var identifier = ReadIdentifier();
                         var type = Token.LookupIdentifier(identifier);
                         token = new Token(type, identifier);
                     }
-                    else if(IsDigit(_currentChar))
+                    else if(IsDigit(this.CurrentChar))
                     {
                         var number = ReadNumber();
                         token = new Token(TokenType.INT, number);
                     }
-                    else if(IsReturnCode(_currentChar))
+                    else if(IsReturnCode(this.CurrentChar))
                     {
                         var code = ReadReturnCode();
                         token = new Token(TokenType.RETURNCODE, code);
                     }
                     else
                     {
-                        token = new Token(TokenType.ILLEGAL, _currentChar.ToString());
+                        token = new Token(TokenType.ILLEGAL, this.CurrentChar.ToString());
                     }
                     break;
             }
@@ -87,11 +87,11 @@ namespace Basic01.Lexing
         /// 識別子に対応した文字列を返す。
         private string ReadIdentifier()
         {
-            var identifier = _currentChar.ToString();
+            var identifier = this.CurrentChar.ToString();
             // 次の文字がLetterであればそれを読んで加える
-            while (IsLetter(_nextChar))
+            while (IsLetter(this.NextChar))
             {
-                identifier += _nextChar;
+                identifier += this.NextChar;
                 ReadChar();
             }
             return identifier;
@@ -100,11 +100,11 @@ namespace Basic01.Lexing
         /// 識別子に対応した文字列を返す。
         private string ReadNumber()
         {
-            var number = _currentChar.ToString();
+            var number = this.CurrentChar.ToString();
             // 次の文字が数値であればそれを読んで加える
-            while (IsDigit(_nextChar))
+            while (IsDigit(this.NextChar))
             {
-                number += _nextChar;
+                number += this.NextChar;
                 ReadChar();
             }
             return number;
@@ -113,11 +113,11 @@ namespace Basic01.Lexing
         /// 識別子に対応した文字列を返す。
         private string ReadReturnCode()
         {
-            var code = _currentChar.ToString();
+            var code = this.CurrentChar.ToString();
             // 次の文字が改行コードであればそれを読んで加える
-            while (IsReturnCode(_nextChar))
+            while (IsReturnCode(this.NextChar))
             {
-                code += _nextChar;
+                code += this.NextChar;
                 ReadChar();
             }
             return code;
@@ -148,35 +148,35 @@ namespace Basic01.Lexing
         /// 範囲外まで進むとNULL文字（0）で終端を表す。
         private void ReadChar()
         {
-            if(_position >= _input.Length)
+            if(this.Position >= this.Input.Length)
             {
-                _currentChar = (char)0;
+                this.CurrentChar = (char)0;
             }
             else
             {
-                _currentChar = _input[_position];
+                this.CurrentChar = this.Input[this.Position];
             }
 
-            if(_position + 1 >= _input.Length)
+            if(this.Position + 1 >= this.Input.Length)
             {
-                _nextChar = (char)0;
+                NextChar = (char)0;
             }
             else
             {
-                _nextChar = _input[_position + 1];
+                this.NextChar = this.Input[this.Position + 1];
             }
-            _position.DebugLog("_position");
-            _currentChar.DebugLog("_currentChar");
-            _nextChar.DebugLog("_nextChar");
+            this.Position.DebugLog("Position");
+            this.CurrentChar.DebugLog("CurrentChar");
+            this.NextChar.DebugLog("NextChar");
 
-            _position += 1;
+            this.Position += 1;
         }
 
         /// 空白やタブは読み飛ばす
         private void SkipWhiteSpace()
         {
-                while(_currentChar == ' '
-                    || _currentChar == '\t')
+                while(this.CurrentChar == ' '
+                    || this.CurrentChar == '\t')
                 {
                     ReadChar();
                 }
