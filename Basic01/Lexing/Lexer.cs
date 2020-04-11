@@ -8,7 +8,9 @@ namespace Basic01.Lexing
         public char _nextChar {get; private set;}   // 次の文字を先読みして保持
         public int _position {get; private set;}    // 現在読み出している文字位置
 
-        // 字句解析器
+        /// 字句解析器
+        /// 構文上意味のある語でトークン列を生成します。
+        /// ソースコードからトークン列を生成する機能。
         public Lexer(string input)
         {
             _input = input;
