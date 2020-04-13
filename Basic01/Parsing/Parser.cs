@@ -14,6 +14,8 @@ namespace Basic01.Parsing
         public Token CurrentToken {get; set;}
         public Token NextToken {get; set;}
         public Lexer Lexer {get; set;}
+        public List<string> Errors {get; set;}
+            = new List<string>();
 
         public Parser(Lexer lexer)
         {
@@ -73,6 +75,7 @@ namespace Basic01.Parsing
             }
         }
 
+        // LET文をパースしてLetStatementノードを作成して返す。
         private IStatement ParseLetStatement()
         {
             var statement = new LetStatement();
@@ -114,7 +117,14 @@ namespace Basic01.Parsing
                 return true;
             }
             // そうでなければ何もせず判定結果のみ返す
+            this.AddNextTokenError(type, this.NextToken.Type);
             return false;
+        }
+
+        // エラーメッセージをリストに追加する。
+        private void AddNextTokenError(TokenType expected, TokenType actual)
+        {
+            this.Errors.Add($"{actual.ToString()} ではなく {expected.ToString()} が来なければなりません。");
         }
     }
 }

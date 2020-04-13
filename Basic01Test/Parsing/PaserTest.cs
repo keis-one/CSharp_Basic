@@ -14,11 +14,12 @@ namespace Basic01Test.Parsing
         {
             var input = @"LET X = 5
 LET Y=10
-LET XYZ = 838383
+LET XYZ =  1000
 ";
             var lexer = new Lexer(input);
             var parser = new Parser(lexer);
             var root = parser.ParseProgram();
+            this._CheckParserErrors(parser);
 
             /// 構文はX,Y,XYZの３ルート
             Assert.Equal(root.Statements.Count, 3);
@@ -30,6 +31,13 @@ LET XYZ = 838383
                 var statement = root.Statements[i];
                 this._TestLetStatement(statement, name);
             }
+        }
+
+        private void _CheckParserErrors(Parser parser)
+        {
+            if (parser.Errors.Count == 0) return;
+            var message = "\n" + string.Join("\n", parser.Errors);
+            throw new Exception(message);
         }
 
         // LET文のテスト
