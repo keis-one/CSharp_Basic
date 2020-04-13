@@ -70,9 +70,27 @@ namespace Basic01.Parsing
                 case TokenType.LET:
                     // 現在のトークンがLETトークンであればParseLetStatementを呼び出す。
                     return this.ParseLetStatement();
+                case TokenType.RETURN:
+                    return this.ParseReturnStatement();
                 default:
                     return null;
             }
+        }
+
+        // 現在のトークンからreturn文をパースしてReturnStatementを返す。
+        private IStatement ParseReturnStatement()
+        {
+            var statement = new ReturnStatement();
+            statement.Token = this.CurrentToken;
+            this.ReadToken();
+
+            // TODO:後で実装
+            while (this.CurrentToken.Type != TokenType.RETURNCODE)
+            {
+                // リターンコードが見つかるまで
+                this.ReadToken();
+            }
+            return statement;
         }
 
         // LET文をパースしてLetStatementノードを作成して返す。
