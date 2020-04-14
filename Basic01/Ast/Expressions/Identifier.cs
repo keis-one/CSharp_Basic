@@ -7,6 +7,8 @@ namespace Basic01.Ast.Expressions
     {
         public Token Token {get; set;}
         public string Value {get; set;} // 変数名を指す
+        public string TokenLiteral()
+            => this.Token?.Literal ?? "";
 
         public Identifier(Token token, string value)
         {
@@ -14,7 +16,7 @@ namespace Basic01.Ast.Expressions
             Value = value;
         }
 
-        public string TokenLiteral()
+        public string ToCode()
             => this.Token.Literal;
     }
 }

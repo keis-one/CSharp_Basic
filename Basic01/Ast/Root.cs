@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Basic01.Ast
 {
@@ -14,6 +15,18 @@ namespace Basic01.Ast
         public string TokenLiteral()
         {
             return this.Statements.FirstOrDefault()?.TokenLiteral() ?? " ";
+        }
+
+        // 改行区切りで連結した文字列を返す。
+        public string ToCode()
+        {
+            var builder = new StringBuilder();
+            foreach(var ast in this.Statements)
+            {
+                builder.AppendLine(ast.ToCode());
+            }
+            // 末尾に改行コードがついてしまうため、Trimする。
+            return builder.ToString().TrimEnd();
         }
     }
 }

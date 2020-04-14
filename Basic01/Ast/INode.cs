@@ -5,5 +5,6 @@ namespace Basic01.Ast
         // ノードに紐付けられるトークンを返すメソッド
         // ※デバッグでのみ使用
         string TokenLiteral();
+        string ToCode();
     }
 }

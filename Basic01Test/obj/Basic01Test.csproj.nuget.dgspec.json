@@ -1,38 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Programming\\CSharp_Basic\\Basic01Test\\Basic01Test.csproj": {}
+    "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01Test\\Basic01Test.csproj": {}
   },
   "projects": {
-    "d:\\Programming\\CSharp_Basic\\Basic01Test\\Basic01Test.csproj": {
+    "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01Test\\Basic01Test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Programming\\CSharp_Basic\\Basic01Test\\Basic01Test.csproj",
+        "projectUniqueName": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01Test\\Basic01Test.csproj",
         "projectName": "Basic01Test",
-        "projectPath": "d:\\Programming\\CSharp_Basic\\Basic01Test\\Basic01Test.csproj",
-        "packagesPath": "C:\\Users\\kmiyazaki\\.nuget\\packages\\",
-        "outputPath": "d:\\Programming\\CSharp_Basic\\Basic01Test\\obj\\",
+        "projectPath": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01Test\\Basic01Test.csproj",
+        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
+        "outputPath": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01Test\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
-        ],
         "configFilePaths": [
-          "C:\\Users\\kmiyazaki\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj": {
-                "projectPath": "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj"
+              "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj": {
+                "projectPath": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj"
               }
             }
           }
@@ -78,32 +72,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj": {
+    "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj",
+        "projectUniqueName": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj",
         "projectName": "Basic01",
-        "projectPath": "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj",
-        "packagesPath": "C:\\Users\\kmiyazaki\\.nuget\\packages\\",
-        "outputPath": "d:\\Programming\\CSharp_Basic\\Basic01\\obj\\",
+        "projectPath": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj",
+        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
+        "outputPath": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
-        ],
         "configFilePaths": [
-          "C:\\Users\\kmiyazaki\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -140,7 +128,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

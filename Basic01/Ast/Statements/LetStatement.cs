@@ -1,3 +1,4 @@
+using System.Text;
 using Basic01.Ast.Expressions;
 using Basic01.Lexing;
 
@@ -13,5 +14,16 @@ namespace Basic01.Ast.Statements
         public string TokenLiteral()
             => this.Token.Literal;
 
+        public string ToCode()
+        {
+            var builder = new StringBuilder();
+            builder.Append(this.Token?.Literal ?? "");
+            builder.Append(" ");
+            builder.Append(this.Name?.ToCode() ?? "");
+            builder.Append(" = ");
+            builder.Append(this.Value?.ToCode() ?? "");
+            builder.Append("\n");
+            return builder.ToString();
+        }
     }
 }
