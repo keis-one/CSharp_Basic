@@ -4,11 +4,46 @@ using Basic01.Ast;
 using Basic01.Ast.Statements;
 using Basic01.Lexing;
 using Basic01.Parsing;
+using Basic01.Ast.Expressions;
 
 namespace Basic01Test.Parsing
 {
     public class ParserTest
     {
+        [Fact]
+        // foobar; を構文解析し、正しく式のASTが生成できているかを確認
+        public void TestIdentiferExpression1()
+        {
+            var input = @"foobar";
+
+            var lexer = new Lexer(input);
+            var parser = new Parser(lexer);
+            var root = parser.ParseProgram();
+            this._CheckParserErrors(parser);
+
+            Assert.Equal(root.Statements.Count, 1);
+
+            var statement = root.Statements[0] as ExpressionStatement;
+            if (statement == null)
+            {
+                throw new Exception("statement が ExpressionStatement ではありません。");
+            }
+
+            var ident = statement.Expression as Identifier;
+            if (ident == null)
+            {
+                throw new Exception("Expression が Identifier ではありません。");
+            }
+            if (ident.Value != "foobar")
+            {
+                throw new Exception("ident.Value が foobar ではありません。");
+            }
+            if (ident.TokenLiteral() != "foobar")
+            {
+                throw new Exception("ident.TokenLiteral が foobar ではありません。");
+            }
+        }
+
         [Fact]
         public void TestLetStatement1()
         {

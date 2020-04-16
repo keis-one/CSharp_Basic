@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj": {}
+    "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj": {}
   },
   "projects": {
-    "C:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj": {
+    "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj",
+        "projectUniqueName": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj",
         "projectName": "Basic01",
-        "projectPath": "C:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj",
+        "projectPath": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\obj\\",
+        "outputPath": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config"

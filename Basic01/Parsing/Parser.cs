@@ -7,6 +7,13 @@ using Basic01.Lexing;
 
 namespace Basic01.Parsing
 {
+    // 前置構文解析関数（prefix parsing function）
+    // 左側になにもないので引数は不要
+    using PrefixParseFn = Func<IExpression>;
+    // 中置構文解析関数（infix parsing function）
+    // 解析中の中置演算子の左側に来る式を引数として受け取る
+    using InfixParseFn = Func<IExpression, IExpression>;
+
     /// 抽出構文器
     /// トークン列を受け取り、抽出構文木を生成する。
     public class Parser
@@ -17,6 +24,11 @@ namespace Basic01.Parsing
         public List<string> Errors {get; set;}
             = new List<string>();
 
+        // トークンの種類と解析関数の辞書を管理
+        // これでこの解析器はトークンの種類がわかれば、適切な構文解析関数を呼び出せる
+        public Dictionary<TokenType, PrefixParseFn> PrefixParseFns {get; set;}
+        public Dictionary<TokenType, InfixParseFn> InfixParseFns {get; set;}
+
         public Parser(Lexer lexer)
         {
             this.Lexer = lexer;
@@ -24,6 +36,23 @@ namespace Basic01.Parsing
             // ２つ分のトークンを読み込んでセットしておく
             this.CurrentToken = this.Lexer.NextToken();
             this.NextToken = this.Lexer.NextToken();
+
+            // トークンの種類と解析関数を関連付ける
+            this.RegisterPrefixParseFns();
+        }
+
+        private void RegisterPrefixParseFns()
+        {
+            this.PrefixParseFns = new Dictionary<TokenType, PrefixParseFn>();
+            this.PrefixParseFns.Add(TokenType.IDENT, this.ParseIdentifer);
+        }
+
+        // 識別子の構文解析関数
+        private IExpression ParseIdentifer()
+        {
+            // 現在の識別子トークンに対応する識別子のASTを生成して返す。
+            // これをコンストラクタ内で TokenType.IDENT に紐づけて登録しておく。
+            return new Identifier(this.CurrentToken, this.CurrentToken.Literal);
         }
 
         // トークンを読み進めるためのヘルパーメソッド
@@ -73,8 +102,33 @@ namespace Basic01.Parsing
                 case TokenType.RETURN:
                     return this.ParseReturnStatement();
                 default:
-                    return null;
+                    // 上記以外のトークンが来る場合にはすべて式文として解析する式文解析関数を呼び出す。
+                    return this.ParseExpressionStatement();
             }
+        }
+
+        public IExpression ParseExpression(Precedence precedence)
+        {
+            // 現在のトークンの種類に関連つけられた解析関数を取り出す。
+            this.PrefixParseFns.TryGetValue(this.CurrentToken.Type, out var prefix);
+            // 関連する解析関数が存在しなければ、解析結果として Null を返す。
+            if (prefix == null) return null;
+
+            // 関連する解析関数が存在すればそれを実行し、得られる式のASTを返す。
+            var leftExpression = prefix();
+            return leftExpression;
+        }
+
+        public ExpressionStatement ParseExpressionStatement()
+        {
+            // 現在のトークンをセットし、式の解析関数 ParseExpression() を呼び出す。
+            var statement = new ExpressionStatement();
+            statement.Token = this.CurrentToken;
+
+            statement.Expression = this.ParseExpression(Precedence.LOWEST);
+
+            return statement;
+
         }
 
         // 現在のトークンからreturn文をパースしてReturnStatementを返す。
@@ -144,5 +198,17 @@ namespace Basic01.Parsing
         {
             this.Errors.Add($"{actual.ToString()} ではなく {expected.ToString()} が来なければなりません。");
         }
+    }
+    
+    // 優先度は列挙体で定義
+    public enum Precedence
+    {
+        LOWEST = 1,
+        EQUALS,         // ==
+        LESSGREATER,    // >,<
+        SUM,            // +
+        PRODUCT,        // *
+        PREFIX,         // -x, !x
+        CALL,           // myFunction(x)
     }
 }
