@@ -28,6 +28,40 @@ namespace Basic01.Parsing
         // これでこの解析器はトークンの種類がわかれば、適切な構文解析関数を呼び出せる
         public Dictionary<TokenType, PrefixParseFn> PrefixParseFns {get; set;}
         public Dictionary<TokenType, InfixParseFn> InfixParseFns {get; set;}
+        // トークンの種類と優先度を管理
+        public Dictionary<TokenType, Precedence> Precedences {get; set;}
+            = new Dictionary<TokenType, Precedence>()
+            {
+                {TokenType.EQ, Precedence.EQUALS},
+                {TokenType.NOT_EQ, Precedence.EQUALS},
+                {TokenType.LT, Precedence.LESSGREATER},
+                {TokenType.GT, Precedence.LESSGREATER},
+                {TokenType.PLUS, Precedence.SUM},
+                {TokenType.MINUS, Precedence.SUM},
+                {TokenType.SLASH, Precedence.PRODUCT},
+                {TokenType.ASTERISK, Precedence.PRODUCT},
+            };
+
+        // 現在のトークン種類の優先度を取得
+        public Precedence CurrentPrecedence
+        {
+            get{
+                if (this.Precedences.TryGetValue(this.CurrentToken.Type, out var p))
+                    return p;
+                // 優先度が定義されていないトークンの場合は最も低い優先度とする
+                return Precedence.LOWEST;
+            }
+        }
+        // 次のトークン種類の優先度を取得
+        public Precedence NextPrecedence
+        {
+            get{
+                if (this.Precedences.TryGetValue(this.NextToken.Type, out var p))
+                    return p;
+                // 優先度が定義されていないトークンの場合は最も低い優先度とする
+                return Precedence.LOWEST;
+            }
+        }
 
         public Parser(Lexer lexer)
         {
@@ -39,20 +73,30 @@ namespace Basic01.Parsing
 
             // トークンの種類と解析関数を関連付ける
             this.RegisterPrefixParseFns();
+            this.RegisterInfixParseFns();
         }
 
         private void RegisterPrefixParseFns()
         {
             this.PrefixParseFns = new Dictionary<TokenType, PrefixParseFn>();
             this.PrefixParseFns.Add(TokenType.IDENT, this.ParseIdentifer);
-        }
 
-        // 識別子の構文解析関数
-        private IExpression ParseIdentifer()
+            this.PrefixParseFns.Add(TokenType.INT, this.ParseIntegerLiteral);
+
+            this.PrefixParseFns.Add(TokenType.BANG, this.ParsePrefixExpression);
+            this.PrefixParseFns.Add(TokenType.MINUS, this.ParsePrefixExpression);
+        }
+        private void RegisterInfixParseFns()
         {
-            // 現在の識別子トークンに対応する識別子のASTを生成して返す。
-            // これをコンストラクタ内で TokenType.IDENT に紐づけて登録しておく。
-            return new Identifier(this.CurrentToken, this.CurrentToken.Literal);
+            this.InfixParseFns = new Dictionary<TokenType, InfixParseFn>();
+            this.InfixParseFns.Add(TokenType.PLUS, this.ParseInfixExpression);
+            this.InfixParseFns.Add(TokenType.MINUS, this.ParseInfixExpression);
+            this.InfixParseFns.Add(TokenType.SLASH, this.ParseInfixExpression);
+            this.InfixParseFns.Add(TokenType.ASTERISK, this.ParseInfixExpression);
+            this.InfixParseFns.Add(TokenType.EQ, this.ParseInfixExpression);
+            this.InfixParseFns.Add(TokenType.NOT_EQ, this.ParseInfixExpression);
+            this.InfixParseFns.Add(TokenType.LT, this.ParseInfixExpression);
+            this.InfixParseFns.Add(TokenType.GT, this.ParseInfixExpression);
         }
 
         // トークンを読み進めるためのヘルパーメソッド
@@ -107,15 +151,96 @@ namespace Basic01.Parsing
             }
         }
 
+        // 識別子の構文解析関数
+        private IExpression ParseIdentifer()
+        {
+            // 現在の識別子トークンに対応する識別子のASTを生成して返す。
+            // これをコンストラクタ内で TokenType.IDENT に紐づけて登録しておく。
+            return new Identifier(this.CurrentToken, this.CurrentToken.Literal);
+        }
+
+        public IExpression ParseIntegerLiteral()
+        {
+            // リテラルを整数値に変換
+            if (int.TryParse(this.CurrentToken.Literal, out int result))
+            {
+                return new IntegerLiteral()
+                {
+                    Token = this.CurrentToken,
+                    Value = result,
+                };
+            }
+
+            // 型変換失敗時
+            var message = $"{this.CurrentToken.Literal} を integer に変換できません。";
+            this.Errors.Add(message);
+            return null;
+        }
+
+        private IExpression ParsePrefixExpression()
+        {
+            // 演算子トークンとしてPrefixExpressionを生成
+            var expression = new PrefixExpression()
+            {
+                Token = this.CurrentToken,
+                Operator = this.CurrentToken.Literal,
+            };
+
+            this.ReadToken();
+            // 前置演算子の後ろには式
+            expression.Right = this.ParseExpression(Precedence.PREFIX);
+            return expression;
+        }
+        private IExpression ParseInfixExpression(IExpression left)
+        {
+            // 演算子トークンとしてInfixExpressionを生成
+            var expression = new InfixExpression()
+            {
+                Token = this.CurrentToken,
+                Operator = this.CurrentToken.Literal,
+                Left = left,    // 左辺は引数で受け取ったものを使用する
+            };
+
+            // 現在のトークンに対応する優先度を取得
+            var precedence = this.CurrentPrecedence;
+            // 演算子トークンを読み飛ばす
+            this.ReadToken();
+            // 中置演算子の後ろには式
+            // 関数を呼ぶときに優先度を引数で渡す
+            expression.Right = this.ParseExpression(precedence);
+            return expression;
+        }
+
         public IExpression ParseExpression(Precedence precedence)
         {
             // 現在のトークンの種類に関連つけられた解析関数を取り出す。
             this.PrefixParseFns.TryGetValue(this.CurrentToken.Type, out var prefix);
             // 関連する解析関数が存在しなければ、解析結果として Null を返す。
-            if (prefix == null) return null;
+            if (prefix == null)
+            {
+                this.AddPrefixParseFnError(this.CurrentToken.Type);
+                return null;
+            }
 
             // 関連する解析関数が存在すればそれを実行し、得られる式のASTを返す。
             var leftExpression = prefix();
+
+            // 優先度がより低い演算子に遭遇するまで右辺の式として解析を続ける。
+            // より高い演算子からなる式を一まとまりのブロックとして扱う。
+            // 数式でいうと括弧でくるむ行為を行う。
+            while (this.NextToken.Type != TokenType.RETURNCODE
+                && precedence < this.NextPrecedence)
+            {
+                this.InfixParseFns.TryGetValue(this.NextToken.Type, out var infix);
+                if(infix == null)
+                {
+                    return leftExpression;
+                }
+
+                this.ReadToken();
+                leftExpression = infix(leftExpression);
+            }
+
             return leftExpression;
         }
 
@@ -126,6 +251,13 @@ namespace Basic01.Parsing
             statement.Token = this.CurrentToken;
 
             statement.Expression = this.ParseExpression(Precedence.LOWEST);
+
+            // リターンコードとコロンを読み飛ばす
+            if (this.NextToken.Type == TokenType.RETURNCODE
+                || this.CurrentToken.Type != TokenType.COLON)
+            {
+                this.ReadToken(); 
+            }
 
             return statement;
 
@@ -139,7 +271,8 @@ namespace Basic01.Parsing
             this.ReadToken();
 
             // TODO:後で実装
-            while (this.CurrentToken.Type != TokenType.RETURNCODE)
+            while (this.CurrentToken.Type != TokenType.RETURNCODE
+                || this.CurrentToken.Type != TokenType.COLON)
             {
                 // リターンコードが見つかるまで
                 this.ReadToken();
@@ -170,7 +303,8 @@ namespace Basic01.Parsing
                 
             // 式　LET文の右辺
             // TODO:後で実装
-            while (this.CurrentToken.Type != TokenType.RETURNCODE)
+            while (this.CurrentToken.Type != TokenType.RETURNCODE
+                || this.CurrentToken.Type != TokenType.COLON)
             {
                 // 改行が見つかるまで
                 this.ReadToken();
@@ -198,6 +332,11 @@ namespace Basic01.Parsing
         {
             this.Errors.Add($"{actual.ToString()} ではなく {expected.ToString()} が来なければなりません。");
         }
+        private void AddPrefixParseFnError(TokenType tokenType)
+        {
+            var message = $"{tokenType.ToString()}に関連付けされた Prefix Parse Function が存在しません。";
+            this.Errors.Add(message);
+        }
     }
     
     // 優先度は列挙体で定義
@@ -206,9 +345,10 @@ namespace Basic01.Parsing
         LOWEST = 1,
         EQUALS,         // ==
         LESSGREATER,    // >,<
-        SUM,            // +
-        PRODUCT,        // *
+        SUM,            // +,-
+        PRODUCT,        // *,/
         PREFIX,         // -x, !x
         CALL,           // myFunction(x)
     }
+    
 }

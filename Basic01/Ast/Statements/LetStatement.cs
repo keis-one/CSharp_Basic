@@ -22,7 +22,6 @@ namespace Basic01.Ast.Statements
             builder.Append(this.Name?.ToCode() ?? "");
             builder.Append(" = ");
             builder.Append(this.Value?.ToCode() ?? "");
-            builder.Append("\n");
             return builder.ToString();
         }
     }

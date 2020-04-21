@@ -26,13 +26,50 @@ namespace Basic01.Lexing
             switch (this.CurrentChar)
             {
                 case '=':
-                    token = new Token(TokenType.ASSIGN, this.CurrentChar.ToString());
+                    if(this.NextChar == '=')
+                    {
+                        token = new Token(TokenType.EQ, "==");
+                        this.ReadChar();
+                    }
+                    else
+                    {
+                        token = new Token(TokenType.ASSIGN, this.CurrentChar.ToString());
+                    }
                     break;
                 case '+':
                     token = new Token(TokenType.PLUS, this.CurrentChar.ToString());
                     break;
+                case '-':
+                    token = new Token(TokenType.MINUS, this.CurrentChar.ToString());
+                    break;
+                case '*': 
+                    token = new Token(TokenType.ASTERISK, this.CurrentChar.ToString()); 
+                    break; 
+                case '/': 
+                    token = new Token(TokenType.SLASH, this.CurrentChar.ToString()); 
+                    break; 
+                case '!':
+                    if (this.NextChar == '=')
+                    {
+                        token = new Token(TokenType.NOT_EQ, "!=");
+                        this.ReadChar();
+                    }
+                    else
+                    {
+                        token = new Token(TokenType.BANG, this.CurrentChar.ToString());
+                    }
+                    break;
+                case '>': 
+                    token = new Token(TokenType.GT, this.CurrentChar.ToString()); 
+                    break; 
+                case '<': 
+                    token = new Token(TokenType.LT, this.CurrentChar.ToString()); 
+                    break;
                 case ',':
                     token = new Token(TokenType.COMMA, this.CurrentChar.ToString());
+                    break;
+                case ':':
+                        token = new Token(TokenType.COLON, "\r\n");
                     break;
                 case ';':
                     token = new Token(TokenType.SEMICOLON, this.CurrentChar.ToString());
@@ -92,7 +129,7 @@ namespace Basic01.Lexing
             while (IsLetter(this.NextChar))
             {
                 identifier += this.NextChar;
-                ReadChar();
+                this.ReadChar();
             }
             return identifier;
         }
@@ -137,8 +174,7 @@ namespace Basic01.Lexing
         {
             return ('0' <= c && c <= '9');
         }
-        /// 0～9のいずれかからなる文字列かどうか。
-        /// TODO:小数や16進数など複雑な数値には対応していない。
+        /// 改行コードいずれかからなる文字列かどうか。
         private bool IsReturnCode(char c)
         {
             return (c == '\r' || c == '\n');

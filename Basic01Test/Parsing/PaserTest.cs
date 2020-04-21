@@ -11,7 +11,7 @@ namespace Basic01Test.Parsing
     public class ParserTest
     {
         [Fact]
-        // foobar; を構文解析し、正しく式のASTが生成できているかを確認
+        // foobar を構文解析し、正しく式のASTが生成できているかを確認
         public void TestIdentiferExpression1()
         {
             var input = @"foobar";
@@ -68,13 +68,37 @@ LET XYZ =  1000
             }
         }
 
-        private void _CheckParserErrors(Parser parser)
+        [Fact]
+        // 演算子の優先度に応じて解析できているのかを確認
+        public void TestOperatorPrecedenceParsing()
         {
-            if (parser.Errors.Count == 0) return;
-            var message = "\n" + string.Join("\n", parser.Errors);
-            throw new Exception(message);
-        }
+            var tests = new[]
+            {
+                ("a + b", "(a + b)"),
+                ("!-a", "(!(-a))"),
+                ("a + b - c", "((a + b) - c)"),
+                ("a * b / c", "((a * b) / c)"),
+                ("a + b * c", "(a + (b * c))"),
+                ("a + b * c + d / e - f", "(((a + (b * c)) + (d / e)) - f)"),
+                ("1 + 2 -3 * 4", "((1 + 2) - (3 * 4))"),
+                (@"1 + 2: -3 * 4", "(1 + 2)\r\n((-3) * 4)"),
+                (@"1 + 2
+ -3 * 4", "(1 + 2)\r\n((-3) * 4)"),
+                ("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))"),
+                ("3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))"),
+            };
+            foreach (var (input, code) in tests)
+            {
+                var lexer = new Lexer(input);
+                var parser = new Parser(lexer);
+                var root = parser.ParseProgram();
+                this._CheckParserErrors(parser);
 
+                var actual = root.ToCode();
+                Assert.Equal(code, actual);
+            }
+        }
+        
         // LET文のテスト
         private void _TestLetStatement(IStatement statement, string name)
         {
@@ -88,6 +112,14 @@ LET XYZ =  1000
             // 識別子の確認
             Assert.Equal(letStatement.Name.TokenLiteral(), name);
             Assert.Equal(letStatement.Name.Value, name);
+        }
+
+        // 汎用メソッド
+        private void _CheckParserErrors(Parser parser)
+        {
+            if (parser.Errors.Count == 0) return;
+            var message = "\n" + string.Join("\n", parser.Errors);
+            throw new Exception(message);
         }
     }
 }

@@ -45,8 +45,17 @@ namespace Basic01.Lexing
         // 演算子
         ASSIGN,
         PLUS,
+        MINUS, 
+        ASTERISK, 
+        SLASH, 
+        BANG, 
+        LT, 
+        GT, 
+        EQ, 
+        NOT_EQ, 
         // デリミタ
         COMMA,
+        COLON,
         SEMICOLON,
         // 括弧(){}
         LPAREN,
@@ -56,6 +65,10 @@ namespace Basic01.Lexing
         // キーワード
         FUNCTION,
         LET,
+        IF, 
+        ELSE, 
+        TRUE, 
+        FALSE, 
         RETURNCODE,
         RETURN,
         END,

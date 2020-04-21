@@ -16,7 +16,6 @@ namespace Basic01.Ast.Statements
             builder.Append(this.Token?.Literal ?? "");
             builder.Append(" ");
             builder.Append(this.ReturnValue?.ToCode() ?? "");
-            builder.Append("\n");
             return builder.ToString();
         }
     }

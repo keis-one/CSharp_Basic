@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "psBKofPh3eUNlwFea72FF3tkEt5YWpZeVuN6Dk+2UARQ31tyZu3JrGkpa+uzRVVvPsoH3YRNyoomlkJs7jUT8w==",
+  "dgSpecHash": "GtwCBuo7piajVa901NzxFvNr5HG7d4oGttRLfv2ZOZzwwx+ImeVitDnqUn+ouIfuFFpYzu1b2jeioPNppjC2rw==",
   "success": true,
-  "projectFilePath": "c:\\GamePGM\\CSharp\\CSharp_Basic\\Basic01\\Basic01.csproj",
+  "projectFilePath": "d:\\Programming\\CSharp_Basic\\Basic01\\Basic01.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\USER\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+    "C:\\Users\\kmiyazaki\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
   ],
   "logs": []
 }
